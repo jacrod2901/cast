@@ -11,10 +11,10 @@ class MakeApiCall:
     def __apiLink(self, category):
         link = ''
         if category.lower() == 'newstate':
-            link = f'https://cdn-api.co-vin.in/api/v2/admin/location/districts/placeholder_state_id'
+            link = 'https://cdn-api.co-vin.in/api/v2/admin/location/districts/placeholder_state_id'
 
         if category.lower() == 'newdiscrict':
-            link = f"https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict?district_id=placeholder_district_id&date=placeholder_api_hit_date"
+            link = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict?district_id=placeholder_district_id&date=placeholder_api_hit_date"
 
         return link
 

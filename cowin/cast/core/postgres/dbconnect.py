@@ -1,6 +1,6 @@
 import psycopg2
 from  datetime import datetime
-from sqlquerygenerator.query_generator import QueryGenerator
+from cast.core.sqlquerygenerator.query_generator import QueryGenerator
 
 db_name = 'testdb1'
 user = 'jacrod2901'

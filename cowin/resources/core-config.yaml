@@ -3,4 +3,4 @@ dbpass: Big@data10
 dbhost: localhost
 dbport: 5432
 dbuser: jacrod2901
-component-root-path: cast.components
+component-root: cast.components
