@@ -1,14 +1,20 @@
+import yaml
+from yaml.loader import FullLoader
 
 
 
 
 class YamlReader():
+    def __init__(self, configpath):
+        self.configpath = configpath
 
-    def __init__(self, yaml_path):
-        self.yaml_path = yaml_path
+    def get_config_dict(self):
+        with open(self.configpath) as file:
+            config = yaml.load(file, Loader=FullLoader)
+            return config
 
-    def get_config_dict(self, configpath):
-        return {}
+    
+        
 
 
     
