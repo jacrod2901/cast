@@ -24,12 +24,11 @@ class ProcessNewUser:
             self.__insertDistDataDistTbl(district_list)
             self.__district_id = self.__getDistIDNewRequest()[0][0]
             new_appoint_data = self.__getAppointDataNewDist(self.__district_id)
-            self.__insertAppointData(new_appoint_data)
+            self.__insertAppointData(new_appoint_data, self.__district_id)
         else:
             self.__district_id = self.__getDistIDNewRequest()[0][0]
             new_appoint_data = self.__getAppointDataNewDist(self.__district_id)
-            print(new_appoint_data)
-            self.__insertAppointData(new_appoint_data)
+            self.__insertAppointData(new_appoint_data, self.__district_id)
 
 
     def __getStateID(self):
@@ -86,18 +85,20 @@ class ProcessNewUser:
         data = self.makeapicall.getApiData(url)
         return data
 
-    def __insertAppointData(self,data):
+    def __insertAppointData(self,data, district_id):
         __dbconn = self.dbconnect
         __dbconnObj = __dbconn.getConnObj()
         __curObj = __dbconnObj.cursor()
         json_data = json.dumps(data['data'])
-        print(json_data)
         __query_original = self.querygenerator.getInsertDataHitsTblQuery()
         __query = __query_original.replace('placeholder_dbtablename', self.__new_appoint_table_name)
         __query = __query.replace('placeholder_status_code', str(data['status_code']))
         __query = __query.replace('placeholder_apidata', json_data)
         __query = __query.replace('placeholder_status_desc', 'NA')
         __query = __query.replace('placeholder_apits', str(datetime.datetime.now()))
+        __query = __query.replace('placeholder_district_id', district_id)
+        print(__query)
+
         __curObj.execute(__query)
         __dbconnObj.commit()
         __dbconnObj.close()

@@ -11,5 +11,5 @@ class Test:
 
 def driver(contextvar):
     test = Test()
-    print('config_reveived', contextvar)
-    print('Number Square', test.square(contextvar['A']))
+    print('config_reveived', contextvar['componentconfig'])
+    print('Number Square', test.square(contextvar['componentconfig']['A']))

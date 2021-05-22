@@ -21,8 +21,8 @@ class QueryGenerator:
 
         # Insert API HIT data in cast_hits_tbl
         self.__insertDataHitsTblQuery = """INSERT INTO placeholder_dbtablename 
-                                            (status_code,status_desc,apidata, apits) 
-                                            VALUES (placeholder_status_code, 'placeholder_status_desc', 'placeholder_apidata', 'placeholder_apits');"""
+                                            (status_code,status_desc,apidata, apits, district_id) 
+                                            VALUES (placeholder_status_code, 'placeholder_status_desc', 'placeholder_apidata', 'placeholder_apits', 'placeholder_district_id');"""
 
 
         # Insert New User Request Data in cast_userrequests_tbl
@@ -42,6 +42,15 @@ class QueryGenerator:
                                                     (state_id, state_name) 
                                                     VALUES ('placeholder_state_id','placeholder_state_name');"""
 
+
+        # TO get API Data from  cast_hits_tbl
+        self.__apiHitsDataQuery = """select apidata, apits, district_id from placeholder_dbtablename where status_code = 200"""
+
+
+    
+    def getApiHitsQuery(self):
+        return self.__apiHitsDataQuery
+    
     def getSateIDQuery(self):
         return self.__stateIDQuery
 
