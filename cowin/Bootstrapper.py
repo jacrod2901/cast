@@ -15,9 +15,9 @@ class BootStrapper:
 
     def __init__(self, core_config_path, component_config_path):
         # Reading Component and Core Yaml's
-        basepath = self.getbasepath()
-        self.coreconfigpath = f'{basepath}/{core_config_path}'
-        self.component_config_path = f'{basepath}/{component_config_path}'
+        self.basepath = self.getbasepath()
+        self.coreconfigpath = f'{self.basepath}/{core_config_path}'
+        self.component_config_path = f'{self.basepath}/{component_config_path}'
         self.core_config = YamlReader(self.coreconfigpath).get_config_dict()
         self.component_config = YamlReader(self.component_config_path).get_config_dict()
 
@@ -49,6 +49,7 @@ class BootStrapper:
         contextvar['dbconnect'] = self.dbconnect
         contextvar['componentconfig'] = self.component_config
         contextvar['coreconfig'] = self.core_config
+        contextvar['basepath'] = self.basepath
         return contextvar
 
     def getbasepath(self):

@@ -4,9 +4,11 @@ from airflow import DAG
 from airflow.operators.dummy_operator import DummyOperator
 from airflow.operators.bash import BashOperator
 from airflow.utils.dates import days_ago
+from test.email_test import send_email
+
 
 def hello_world():
-    return 'Printing hello world!'
+    return f'sending email at:  {datetime.now()} '
 
 default_args = {
     "owner": "jacrod2901",
@@ -24,6 +26,7 @@ with DAG(
     description="Simple tutorial DAG",
     schedule_interval="*/2 * * * *",
     default_args=default_args,
+    catchup=False,
 ) as dag:
 
     
@@ -33,6 +36,12 @@ with DAG(
         python_callable=hello_world,
     )
 
-t1
+    t2 = PythonOperator(
+        task_id='SendEmail',
+        provide_context=True,
+        python_callable=send_email(),
+    )
+
+t1 >> t2
 
     
