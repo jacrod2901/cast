@@ -1,2 +1,8 @@
 component-name: sendnotification.sendnotification
 csv-rel-path: /resources/output.csv
+email-to: castserver01@gmail.com
+email-from: dev@orcasol.net
+email-subject: no-reply - Vaccine Availability Notification
+email-content: THIS IS A NOTIFICATION ALERT FOR VACCINE AVAILABILITY
+credentials-path: secrets/credentials.json
+token-path: secrets/token.json

@@ -1,12 +1,21 @@
 from importlib import import_module
 import argparse
-import os
+import os, sys
 
 from cast.core.hitapi.hitapi  import MakeApiCall
 from cast.core.sqlquerygenerator.query_generator import QueryGenerator
 from cast.core.postgres.dbconnect import DbConnect
 from cast.core.yamlreader.yamlreader import YamlReader
+from cast.core.emailutil.emailutil import EmailUtil
 
+parentPath = os.path.join(
+    os.path.abspath(os.path.dirname(__file__)),
+    os.path.pardir
+)
+
+
+if parentPath not in sys.path:
+    sys.path.insert(0, parentPath)
 
 class BootStrapper:
     DbConnect = None
@@ -15,9 +24,9 @@ class BootStrapper:
 
     def __init__(self, core_config_path, component_config_path):
         # Reading Component and Core Yaml's
-        basepath = self.getbasepath()
-        self.coreconfigpath = f'{basepath}/{core_config_path}'
-        self.component_config_path = f'{basepath}/{component_config_path}'
+        # self.basepath = self.getbasepath()
+        self.coreconfigpath = core_config_path
+        self.component_config_path = component_config_path
         self.core_config = YamlReader(self.coreconfigpath).get_config_dict()
         self.component_config = YamlReader(self.component_config_path).get_config_dict()
 
@@ -25,9 +34,10 @@ class BootStrapper:
         self.makeapicall = MakeApiCall()
         self.querygenerator = QueryGenerator()
         self.dbconnect = DbConnect(self.core_config['db-config'])
+        self.emailutil = EmailUtil(self.core_config['email-config'])
 
-        
         # Making Component Call
+
         
         component_root =  self.core_config['component-root']
         component_name = self.component_config['component-name']
@@ -47,8 +57,10 @@ class BootStrapper:
         contextvar['querygenerator'] = self.querygenerator
         contextvar['makeapicall'] = self.makeapicall
         contextvar['dbconnect'] = self.dbconnect
+        contextvar['emailutil'] = self.emailutil
         contextvar['componentconfig'] = self.component_config
         contextvar['coreconfig'] = self.core_config
+        # contextvar['basepath'] = self.basepath
         return contextvar
 
     def getbasepath(self):

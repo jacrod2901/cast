@@ -5,3 +5,9 @@ db-config:
   dbport: 5432
   dbuser: jacrod2901
 component-root: cast.components
+email-config:
+  credentials-path: /home/jacrod2901/geese/cowin/secrets/credentials.json
+  token-path: /home/jacrod2901/geese/cowin/secrets/token.json
+  email-from: dev@orcasol.net
+  email-subject: no-reply Vax Alert!! 
+  email-content: THIS IS A NOTIFICATION ALERT FOR VACCINE AVAILABILITY

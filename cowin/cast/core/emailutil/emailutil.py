@@ -13,23 +13,14 @@ from google.oauth2.credentials import Credentials
 import pandas as pd
 
 
-class SendNotification:
-    def __init__(self, contextvar):
-        self.__componentconfig = contextvar['componentconfig']
-        self.__coreconfig = contextvar['coreconfig']
-        self.basepath = contextvar['basepath']
-        self.__csv_relative_path = self.__componentconfig['csv-rel-path']
-        self.querygenerator = contextvar['querygenerator']
-        self.makeapicall = contextvar['makeapicall']
-        self.dbconnect = contextvar['dbconnect']
-        self.__email_to = self.__componentconfig['email-to']
-        self.__email_from = self.__componentconfig['email-from']
-        self.__email_subject = self.__componentconfig['email-subject']
-        self.__email_content = self.__componentconfig['email-content']
-
-
-    
-    def __create_message(self):
+class EmailUtil:
+    def __init__(self, email_config):  
+        self.__email_config  = email_config     
+        self.__email_from = self.__email_config['email-from']
+        self.__email_subject = self.__email_config['email-subject']
+        # self.__email_content = self.__email_config['email-content']
+        
+    def __create_message(self, email_to, email_content):
         """Create a message for an email.
         Args:
             sender: Email address of the sender.
@@ -39,8 +30,8 @@ class SendNotification:
         Returns:
             An object containing a base64url encoded email object.
         """
-        message = MIMEText(self.__email_content)
-        message['to'] = self.__email_to
+        message = MIMEText(email_content)
+        message['to'] = email_to
         message['from'] = self.__email_from
         message['subject'] = self.__email_subject
         return {'raw': base64.urlsafe_b64encode(message.as_string().encode()).decode()}
@@ -67,8 +58,8 @@ class SendNotification:
 
 
     def __service_account_login(self):
-        self.__credential_file_path = f"{self.basepath}/{self.__componentconfig['credentials-path']}"
-        self.__token_file_path = f"{self.basepath}/{self.__componentconfig['token-path']}"
+        self.__credential_file_path = self.__email_config['credentials-path']
+        self.__token_file_path = self.__email_config['token-path']
 
 
         # SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
@@ -96,16 +87,9 @@ class SendNotification:
         service = build('gmail', 'v1', credentials=creds)
         return service
 
-    def send_email(self):
+    def send_email(self, email_to, email_content):
         service = self.__service_account_login()
         # Call the Gmail API
-        message = self.__create_message()
+        message = self.__create_message(email_to,email_content)
         sent = self.__send_message(service,'me', message)
-
-
-def driver(contextvar):
-    print('>>>>>>>>>>> Component :: Send Email Notification :: Started <<<<<<<<<<<<')
-    sendemailObj = SendNotification(contextvar)
-    sendemailObj.send_email()
-    print('>>>>>>>>>>> Component :: Send Email Notification :: Complete <<<<<<<<<<<<')
 
