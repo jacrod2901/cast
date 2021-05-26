@@ -16,11 +16,11 @@ import pandas as pd
 class EmailUtil:
     def __init__(self, email_config):  
         self.__email_config  = email_config     
-        self.__email_from = self.__email_config['email_from']
-        self.__email_subject = self.__email_config['email_subject']
-        self.__email_content = self.__email_config['email_content']
+        self.__email_from = self.__email_config['email-from']
+        self.__email_subject = self.__email_config['email-subject']
+        # self.__email_content = self.__email_config['email-content']
         
-    def __create_message(self, email_to):
+    def __create_message(self, email_to, email_content):
         """Create a message for an email.
         Args:
             sender: Email address of the sender.
@@ -30,7 +30,7 @@ class EmailUtil:
         Returns:
             An object containing a base64url encoded email object.
         """
-        message = MIMEText(self.__email_content)
+        message = MIMEText(email_content)
         message['to'] = email_to
         message['from'] = self.__email_from
         message['subject'] = self.__email_subject
@@ -87,9 +87,9 @@ class EmailUtil:
         service = build('gmail', 'v1', credentials=creds)
         return service
 
-    def send_email(self, email_to):
+    def send_email(self, email_to, email_content):
         service = self.__service_account_login()
         # Call the Gmail API
-        message = self.__create_message(email_to)
+        message = self.__create_message(email_to,email_content)
         sent = self.__send_message(service,'me', message)
 
