@@ -22,6 +22,7 @@ class CheckVaxAvailabilty:
         self.emailutil = contextvar['emailutil']
         self.__user_req_queue = Queue()
         self.__num_threads = os.cpu_count()-1
+        self.__usr_req_processed = []
 
 
     def message(self,s):
@@ -37,6 +38,19 @@ class CheckVaxAvailabilty:
     def __readCSV(self):
         return pd.read_csv(self.__csvpath)
 
+
+    def __updateReqStatus(self):
+        __query = self.querygenerator.getUpdateReqStatusQuery()
+        __dbconn = self.dbconnect
+        __dbconnObj = __dbconn.getConnObj()
+        __curObj = __dbconnObj.cursor()
+        __query = __query.replace('placeholder_dbtblname', self.__table_name)
+        __query_new = f"{__query} {tuple(self.__usr_req_processed)}"
+        __curObj.execute(__query_new)
+        __dbconnObj.commit()
+        __dbconnObj.close()
+
+
     def __checkAppointment(self):
         open_requests = self.__checkOpenRequests()
         if len(open_requests) > 0:
@@ -50,7 +64,7 @@ class CheckVaxAvailabilty:
                 # df_limited_fields = df_dist[['available_capacity', 'block_name', 'data_fetch_ts']]
                 # df_limited_fields = df_limited_fields.rename(columns={'data_fetch_ts': 'available_as_on'})
                 # if not df_limited_fields.empty:
-                    
+    
     
     def __check_availabiity(self, q):
         while True:
@@ -64,7 +78,9 @@ class CheckVaxAvailabilty:
             df_limited_fields = df_dist[['available_capacity', 'block_name', 'data_fetch_ts']]
             df_limited_fields = df_limited_fields.rename(columns={'data_fetch_ts': 'available_as_on'})
             if not df_limited_fields.empty:
-                self.emailutil.send_email(email_id, df_limited_fields.to_string())
+                res = self.emailutil.send_email(email_id, df_limited_fields.to_string())
+                if res['id'] != '':
+                    self.__usr_req_processed.append(email_id)
             q.task_done()
 
 
@@ -79,9 +95,10 @@ class CheckVaxAvailabilty:
             worker = threading.Thread(target=self.__check_availabiity, args=(self.__user_req_queue,), name='WORKER-{}'.format(i))
             worker.setDaemon(True)
             worker.start()
-        self.message('*** Main Thread Waiting')
+        # self.message('*** Main Thread Waiting')
         self.__user_req_queue.join()
-        self.message('*** Done')
+        # self.message('*** Done')
+        self.__updateReqStatus()
 
 def driver(contextvar):
     checkvaxavalblty = CheckVaxAvailabilty(contextvar)

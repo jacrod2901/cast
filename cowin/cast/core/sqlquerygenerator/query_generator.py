@@ -47,6 +47,10 @@ class QueryGenerator:
         self.__apiHitsDataQuery = """select apidata, apits, district_id from placeholder_dbtablename where status_code = 200"""
 
 
+        # TO Update req_status in cast_usrrequests_tbl
+        self.__updateReqStatus = """update placeholder_dbtblname set req_status = 1 where email_id in """
+
+
     
     def getApiHitsQuery(self):
         return self.__apiHitsDataQuery
@@ -75,6 +79,9 @@ class QueryGenerator:
 
     def getinsertDatastateGeoTableQuery(self):
         return self.__insertDatastateGeoTableQuery
+    
+    def getUpdateReqStatusQuery(self):
+        return self.__updateReqStatus
 
 
     
