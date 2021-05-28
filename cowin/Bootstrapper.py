@@ -72,7 +72,7 @@ def main(args):
     core_config_path = args.coreconfig
     component_config_path = args.componentconfig
     bs = BootStrapper(core_config_path,component_config_path )
-    print('<<<<< Complete >>>>>>>')
+    print('<<<<< Bootstrapper Complete >>>>>>>')
 
 
 

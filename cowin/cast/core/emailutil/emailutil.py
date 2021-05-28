@@ -92,4 +92,5 @@ class EmailUtil:
         # Call the Gmail API
         message = self.__create_message(email_to,email_content)
         sent = self.__send_message(service,'me', message)
+        return sent
 
