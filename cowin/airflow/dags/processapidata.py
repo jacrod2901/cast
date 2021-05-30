@@ -29,7 +29,7 @@ default_args = {
 with DAG(
     dag_id = "ProcessAPIData",
     description="Process Latest API Data",
-    schedule_interval="*/5 * * * *",
+    schedule_interval="*/1 * * * *",
     default_args=default_args,
     catchup=False,
 ) as dag:

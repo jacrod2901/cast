@@ -28,7 +28,7 @@ default_args = {
 with DAG(
     dag_id = "GetAppointmentData",
     description="Get Appointment Data for Distinct District ID's",
-    schedule_interval="*/5 * * * *",
+    schedule_interval="*/4 * * * *",
     default_args=default_args,
     catchup=False,
 ) as dag:

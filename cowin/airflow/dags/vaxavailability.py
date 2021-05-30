@@ -28,7 +28,7 @@ default_args = {
 with DAG(
     dag_id = "CheckVaxAvailability",
     description="Check for Vaccine Availability in the Processed Data",
-    schedule_interval="*/5 * * * *",
+    schedule_interval="*/1 * * * *",
     default_args=default_args,
     catchup=False,
 ) as dag:
