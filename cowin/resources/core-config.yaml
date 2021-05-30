@@ -11,3 +11,5 @@ email-config:
   email-from: dev@orcasol.net
   email-subject: no-reply Vax Alert!! 
   email-content: THIS IS A NOTIFICATION ALERT FOR VACCINE AVAILABILITY
+json-config:
+  json-file-path: /home/jacrod2901/geese/cowin/resources/document.json

@@ -6,6 +6,7 @@ import pandas as pd, datetime, os
 class ProcessApiData:
     def __init__(self, contextvar):
         self.__componentconfig = contextvar['componentconfig']
+        self.__jsonconfig = contextvar['jsonconfig']
         self.__coreconfig = contextvar['coreconfig']
         self.__hits_tbl = self.__componentconfig['hits_table_name']
         self.__relativecsvpath = self.__componentconfig['csv_file_path']
@@ -15,9 +16,13 @@ class ProcessApiData:
 
 
     def __getNewData(self):
+        last_apidata_ts = self.__jsonconfig.getJsonData()['last-apidata-timestamp']
         __query = self.querygenerator.getApiHitsQuery()
         __query = __query.replace('placeholder_dbtablename', self.__hits_tbl)
-        data = self.dbconnect.getData(__query)
+        __where_clause = f" and apits > '{last_apidata_ts}'"
+        __query_complete = f"{__query} {__where_clause}"
+        data = self.dbconnect.getData(__query_complete)
+        self.__jsonconfig.updateDocumentTS() #Update Document TS
         return data
 
 
