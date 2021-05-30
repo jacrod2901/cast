@@ -1,0 +1,5 @@
+hits_table_name: cast_hits_tbl
+component-name: apiappntdata.apiappntdata
+userrequests_table_name: cast_userrequests_tbl
+geo_dist_table_name: cast_geo_dist_tbl
+
