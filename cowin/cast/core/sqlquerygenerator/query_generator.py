@@ -47,9 +47,15 @@ class QueryGenerator:
         self.__apiHitsDataQuery = """select apidata, apits, district_id from placeholder_dbtablename where status_code = 200"""
 
 
+        # to get Distinct District ID
+        self.__distinctDistIDQuery = """select distinct district_id from placeholder_geo_dist_tblname where district_name in (select distinct district_name from placeholder_userrequests_tblname where req_status is null)
+"""
     
     def getApiHitsQuery(self):
         return self.__apiHitsDataQuery
+
+    def getDistinctDistIDQuery(self):
+        return self.__distinctDistIDQuery
     
     def getSateIDQuery(self):
         return self.__stateIDQuery
