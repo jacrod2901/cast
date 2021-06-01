@@ -53,8 +53,8 @@ class ProcessApiData:
 
     def writeDFToCsv(self):
         dataDF = self.__processData()
-        basepath = os.getcwd()
-        __completecsvpath = f'{basepath}/{self.__relativecsvpath}'
+        # basepath = os.getcwd()
+        __completecsvpath = f'/home/jacrod2901/geese/cowin/{self.__relativecsvpath}'
         dataDF.to_csv(__completecsvpath, index=False, encoding='utf-8', mode='a')
         return 1 
 
