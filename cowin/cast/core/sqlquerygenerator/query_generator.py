@@ -47,10 +47,13 @@ class QueryGenerator:
         self.__apiHitsDataQuery = """select apidata, apits, district_id from placeholder_dbtablename where status_code = 200"""
 
 
-        # to get Distinct District ID
-        self.__distinctDistIDQuery = """select distinct district_id from placeholder_geo_dist_tblname where district_name in (select distinct district_name from placeholder_userrequests_tblname where req_status is null)
-"""
-    
+        # TO Update req_status in cast_usrrequests_tbl
+        self.__updateReqStatus = """update placeholder_dbtblname set req_status = 1 where email_id in """
+
+
+         # to get Distinct District ID
+        self.__distinctDistIDQuery = """select distinct district_id from placeholder_geo_dist_tblname where district_name in (select distinct district_name from placeholder_userrequests_tblname where req_status is null)"""
+
     def getApiHitsQuery(self):
         return self.__apiHitsDataQuery
 
@@ -81,6 +84,9 @@ class QueryGenerator:
 
     def getinsertDatastateGeoTableQuery(self):
         return self.__insertDatastateGeoTableQuery
+    
+    def getUpdateReqStatusQuery(self):
+        return self.__updateReqStatus
 
 
     

@@ -1,3 +1,4 @@
+from cast.core.jsonutil.jsonutil import JsonUtil
 from importlib import import_module
 import argparse
 import os, sys
@@ -7,7 +8,7 @@ from cast.core.sqlquerygenerator.query_generator import QueryGenerator
 from cast.core.postgres.dbconnect import DbConnect
 from cast.core.yamlreader.yamlreader import YamlReader
 from cast.core.emailutil.emailutil import EmailUtil
-
+from cast.core.jsonutil.jsonutil import JsonUtil
 parentPath = os.path.join(
     os.path.abspath(os.path.dirname(__file__)),
     os.path.pardir
@@ -35,6 +36,7 @@ class BootStrapper:
         self.querygenerator = QueryGenerator()
         self.dbconnect = DbConnect(self.core_config['db-config'])
         self.emailutil = EmailUtil(self.core_config['email-config'])
+        self.jsonutil = JsonUtil(self.core_config['json-config'])
 
         # Making Component Call
 
@@ -60,6 +62,7 @@ class BootStrapper:
         contextvar['emailutil'] = self.emailutil
         contextvar['componentconfig'] = self.component_config
         contextvar['coreconfig'] = self.core_config
+        contextvar['jsonconfig'] = self.jsonutil
         # contextvar['basepath'] = self.basepath
         return contextvar
 
@@ -72,7 +75,7 @@ def main(args):
     core_config_path = args.coreconfig
     component_config_path = args.componentconfig
     bs = BootStrapper(core_config_path,component_config_path )
-    print('<<<<< Complete >>>>>>>')
+    print('<<<<< Bootstrapper Complete >>>>>>>')
 
 
 
