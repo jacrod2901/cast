@@ -51,9 +51,14 @@ class QueryGenerator:
         self.__updateReqStatus = """update placeholder_dbtblname set req_status = 1 where email_id in """
 
 
-    
+         # to get Distinct District ID
+        self.__distinctDistIDQuery = """select distinct district_id from placeholder_geo_dist_tblname where district_name in (select distinct district_name from placeholder_userrequests_tblname where req_status is null)"""
+
     def getApiHitsQuery(self):
         return self.__apiHitsDataQuery
+
+    def getDistinctDistIDQuery(self):
+        return self.__distinctDistIDQuery
     
     def getSateIDQuery(self):
         return self.__stateIDQuery
