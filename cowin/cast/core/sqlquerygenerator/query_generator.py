@@ -54,8 +54,16 @@ class QueryGenerator:
          # to get Distinct District ID
         self.__distinctDistIDQuery = """select distinct district_id from placeholder_geo_dist_tblname where district_name in (select distinct district_name from placeholder_userrequests_tblname where req_status is null)"""
 
+         # to Insert Processed API data in cast_processedapidata_tbl
+
+        self.__insertProcessedData = """INSERT INTO placeholder_dbtblname values ()"""
+
+
     def getApiHitsQuery(self):
         return self.__apiHitsDataQuery
+
+    def getInsertProcessedApiDataQuery(self):
+        return self.____insertProcessedData
 
     def getDistinctDistIDQuery(self):
         return self.__distinctDistIDQuery
