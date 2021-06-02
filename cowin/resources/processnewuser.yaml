@@ -1,4 +1,0 @@
-component-name: processnewuser.processnewuser
-dist_table_name: cast_geo_dist_tbl
-new_appoint_table_name: cast_hits_tbl
-user_Table_name: cast_userrequests_tbl
