@@ -15,6 +15,7 @@ class ProcessNewUser:
 
 
     def __processNewUserData(self, user_data):
+        
         self.__state_name = user_data['state_name']
         self.__district_name = user_data['district_name']
         self.__state_id = self.__getStateID()['state_id']
