@@ -9,10 +9,11 @@ class ProcessApiData:
         self.__jsonconfig = contextvar['jsonconfig']
         self.__coreconfig = contextvar['coreconfig']
         self.__hits_tbl = self.__componentconfig['hits_table_name']
-        self.__relativecsvpath = self.__componentconfig['csv_file_path']
+        self.__processedapidatatbl = self.__componentconfig['processedapidata_table_name']
         self.querygenerator = contextvar['querygenerator']
         self.makeapicall = contextvar['makeapicall']
         self.dbconnect = contextvar['dbconnect']
+        self.__max_data_process_ts = None
 
 
     def __getNewData(self):
@@ -22,47 +23,59 @@ class ProcessApiData:
         __where_clause = f" and apits > '{last_apidata_ts}'"
         __query_complete = f"{__query} {__where_clause}"
         data = self.dbconnect.getData(__query_complete)
-        self.__jsonconfig.updateDocumentTS() #Update Document TS
         return data
 
 
-    def __processData(self):
+    def processData(self):
         data  = self.__getNewData()
         df_complete = pd.DataFrame()
+        
         for data_tup in data:
             api_ts = data_tup[1]
             apidata = data_tup[0]
             district_id = data_tup[2]
             centers_list = apidata['centers']
             dist_name = apidata['centers'][0]['district_name']
+            data_fetch_dt = datetime.datetime.now().date().strftime("%d-%m-%Y")
+            data_process_ts = datetime.datetime.now()
+            self.__max_data_process_ts = str(api_ts)
+            is_processed = None
             for data_dict in centers_list:
                 # dist_name = data_dict['district_name']
                 block_name = data_dict['name']
                 available_sessions = data_dict['sessions']
-                df_aval_sessions = pd.DataFrame(available_sessions)
-                df_aval_sessions['block_name'] = block_name
-                df_complete = df_complete.append(df_aval_sessions, ignore_index=True)
+                for sessions_dict in data_dict['sessions']:
+                    session_tup = (sessions_dict['session_id'],sessions_dict['date'],sessions_dict['available_capacity'],sessions_dict['min_age_limit'],sessions_dict['vaccine'],sessions_dict['available_capacity_dose1'],sessions_dict['available_capacity_dose2'],data_dict['name'], dist_name, api_ts, data_fetch_dt, district_id, data_process_ts )
+                    self.writeProcessedDatatoDB(session_tup)
+        if self.__max_data_process_ts: 
+            self.__jsonconfig.updateDocumentTS(self.__max_data_process_ts) #Update Document TS
+            self.__dbconnObj.close()
+        return 1
 
-            df_complete['dist_name'] = dist_name
-            df_complete['data_fetch_ts'] = api_ts
-            df_complete['data_fetch_date'] = datetime.datetime.now().date().strftime("%d-%m-%Y")
-            df_complete['district_id'] = district_id
-            df_complete['data_process_ts'] = datetime.datetime.now()
+    def writeProcessedDatatoDB(self, data):
+        __dbconn = self.dbconnect
+        self.__dbconnObj = __dbconn.getConnObj()
+        __curObj = self.__dbconnObj.cursor()
+        __query = self.querygenerator.getInsertProcessedApiDataQuery()
+        __query = __query.replace('placeholder_dbtblname', self.__processedapidatatbl)
+        __curObj.execute(__query, data)
+        self.__dbconnObj.commit()
+        
 
-        return df_complete
+    
 
-    def writeDFToCsv(self):
-        dataDF = self.__processData()
-        # basepath = os.getcwd()
-        __completecsvpath = f'/home/jacrod2901/geese/cowin/{self.__relativecsvpath}'
-        dataDF.to_csv(__completecsvpath, index=False, encoding='utf-8', mode='a')
-        return 1 
+
+
+
+
+
 
 
 def driver(contextvar):
     processapidata = ProcessApiData(contextvar)
     print('>>>>>>>>>>> Component :: processapidata :: Started <<<<<<<<<<<<')
-    processapidata.writeDFToCsv()
+    processapidata.processData()
+    
     print('>>>>>>>>>>> Component :: processapidata :: Complete <<<<<<<<<<<<')
 
 

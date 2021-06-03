@@ -1,3 +1,4 @@
 component-name: processapidata.processapidata
 hits_table_name: cast_hits_tbl
 csv_file_path: resources/output.csv 
+processedapidata_table_name: cast_processedapidata_tbl

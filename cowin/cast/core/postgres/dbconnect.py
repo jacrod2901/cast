@@ -30,8 +30,17 @@ class DbConnect:
         
         return dbConnObj
 
+
+
+
+
+
     def getConnObj(self):
         return self.__establishConn()
+
+
+    def closeDbConnection(self):
+        self.__establishConn.close()
 
     def __fetchData(self, query_string):
         self.__dbConnObj = self.__establishConn()

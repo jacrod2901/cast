@@ -55,15 +55,26 @@ class QueryGenerator:
         self.__distinctDistIDQuery = """select distinct district_id from placeholder_geo_dist_tblname where district_name in (select distinct district_name from placeholder_userrequests_tblname where req_status is null)"""
 
          # to Insert Processed API data in cast_processedapidata_tbl
+        self.__insertProcessedData = """INSERT INTO placeholder_dbtblname (session_id, available_date, available_capacity, min_age_limit, vaccine,available_capacity_dose1, available_capacity_dose2, block_name, dist_name, data_fetch_ts, data_fetch_date, district_id, data_process_ts) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
 
-        self.__insertProcessedData = """INSERT INTO placeholder_dbtblname values ()"""
+        # to retrieve un Processed records from  cast_processedapidata_tbl
+        self.__unProcessedApiDataQuery = """Select dist_name,block_name,  available_capacity, available_date, data_fetch_ts from placeholder_tblname where is_processed is NULL"""
+
+        # TO Update Processed Records
+        self.__updatedProcessedStatusQuery = """ Update placeholder_tblname set is_processed = 1 where is_processed is NULL and data_process_ts < 'placeholder_ts'"""
 
 
     def getApiHitsQuery(self):
         return self.__apiHitsDataQuery
 
+    def getUnProcessedApiDataQuery(self):
+        return self.__unProcessedApiDataQuery
+    
+    def getUpdateProcessedStatusQuery(self):
+        return self.__updatedProcessedStatusQuery
+
     def getInsertProcessedApiDataQuery(self):
-        return self.____insertProcessedData
+        return self.__insertProcessedData
 
     def getDistinctDistIDQuery(self):
         return self.__distinctDistIDQuery

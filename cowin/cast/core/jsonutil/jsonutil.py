@@ -17,9 +17,9 @@ class JsonUtil:
         json.dump(content, f)
         f.close()
 
-    def updateDocumentTS(self):
+    def updateDocumentTS(self, ts):
         json_content = self.__readJson()
-        json_content['last-apidata-timestamp'] = str(datetime.datetime.now())
+        json_content['last-apidata-timestamp'] = ts
         self.__writeJson(json_content)
 
     def getJsonData(self):
