@@ -35,6 +35,7 @@ class BootStrapper:
         self.makeapicall = MakeApiCall()
         self.querygenerator = QueryGenerator()
         self.dbconnect = DbConnect(self.core_config['db-config'])
+        self.__dbconnobj = self.dbconnect.getConnObj()
         self.emailutil = EmailUtil(self.core_config['email-config'])
         self.jsonutil = JsonUtil(self.core_config['json-config'])
 
@@ -51,7 +52,10 @@ class BootStrapper:
 
     def importComponentModule(self, modulepath):
         moduleobject = import_module(modulepath)
-        return moduleobject        
+        return moduleobject     
+
+    def closeDbConnection(self):
+        self.dbconnect.closeDbConnection(self.__dbconnobj)   
 
 
     def buildContextVar(self):
@@ -63,6 +67,7 @@ class BootStrapper:
         contextvar['componentconfig'] = self.component_config
         contextvar['coreconfig'] = self.core_config
         contextvar['jsonconfig'] = self.jsonutil
+        contextvar['dbconnobj'] = self.__dbconnobj
         # contextvar['basepath'] = self.basepath
         return contextvar
 
@@ -76,6 +81,9 @@ def main(args):
     component_config_path = args.componentconfig
     bs = BootStrapper(core_config_path,component_config_path )
     print('<<<<< Bootstrapper Complete >>>>>>>')
+    bs.closeDbConnection()
+    sys.exit()
+
 
 
 

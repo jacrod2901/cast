@@ -10,15 +10,17 @@ class ApiAppointmentData:
         self.querygenerator = contextvar['querygenerator']
         self.makeapicall = contextvar['makeapicall']
         self.dbconnect = contextvar['dbconnect']
+        self.__dbconnobj = contextvar['dbconnobj']
 
 
 
-    
+
+
     def __getDistId(self):
         __query = self.querygenerator.getDistinctDistIDQuery()
         __query = __query.replace('placeholder_geo_dist_tblname', self.__geo_dist_table_name)
         __query = __query.replace('placeholder_userrequests_tblname', self.__userrequests_table_name)
-        data = self.dbconnect.getData(__query)
+        data = self.dbconnect.getData(__query,self.__dbconnobj)
         return data
 
 
@@ -32,8 +34,7 @@ class ApiAppointmentData:
 
     def __insertAppointData(self,data, district_id):
         __dbconn = self.dbconnect
-        __dbconnObj = __dbconn.getConnObj()
-        __curObj = __dbconnObj.cursor()
+        __curObj = self.__dbconnobj.cursor()
         json_data = json.dumps(data['data'])
         __query_original = self.querygenerator.getInsertDataHitsTblQuery()
         __query = __query_original.replace('placeholder_dbtablename', self.__hits_table_name)
@@ -43,12 +44,12 @@ class ApiAppointmentData:
         __query = __query.replace('placeholder_apits', str(datetime.datetime.now()))
         __query = __query.replace('placeholder_district_id', district_id)
         __curObj.execute(__query)
-        __dbconnObj.commit()
-        __dbconnObj.close()
+        self.__dbconnobj.commit()
 
 
     def insertAppntData(self):
         distid_list = self.__getDistId()
+        print(f'Getting District Data for {len(distid_list)} No of District IDs ')
         if len(distid_list) ==0:
             return 0
         for idtup in distid_list:
@@ -62,7 +63,6 @@ def driver(contextvar):
     newReqObj = ApiAppointmentData(contextvar)
     newReqObj.insertAppntData()
     print('>>>>>>>>>>> Component :: ApiAppointmentData Request :: Complete <<<<<<<<<<<<')
-
 
 
         

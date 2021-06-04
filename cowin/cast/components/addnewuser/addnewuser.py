@@ -7,6 +7,7 @@ class AddNewUser:
         self.__district_name = self.__componentconfig['district-name']
         self.__email_id = self.__componentconfig['email-id']
         self.__state_name = self.__componentconfig['state-name']
+        self.__dbconnobj = contextvar['dbconnobj']
 
         self.querygenerator = contextvar['querygenerator']
         self.makeapicall = contextvar['makeapicall']
@@ -15,7 +16,6 @@ class AddNewUser:
 
     def loaddata(self):
         __dbconn = self.dbconnect
-        __dbconnObj = __dbconn.getConnObj()
         __query_string = self.querygenerator.getInsertDataUserRequestTblQuery()
         __query_string = __query_string.replace('placeholder_dbtablename', self.__table_name)
         __query_string = __query_string.replace('placeholder_state_name', self.__state_name)
@@ -23,13 +23,9 @@ class AddNewUser:
         __query_string = __query_string.replace('placeholder_email_id', self.__email_id)
         # __query_string = __query_string.replace('placeholder_req_status', )
         __query_string = __query_string.replace('placeholder_req_TS', str(datetime.datetime.now()))
-
-        __dbconn = self.dbconnect
-        __dbconnObj = __dbconn.getConnObj()
-        __curObj = __dbconnObj.cursor()
+        __curObj = self.__dbconnobj.cursor()
         __curObj.execute(__query_string)
-        __dbconnObj.commit()
-        __dbconnObj.close()
+        self.__dbconnobj.commit()
 
 
 def driver(contextvar):
