@@ -44,6 +44,7 @@ with DAG(
     t2 = BashOperator(
         task_id='ProcessAPIData',
         bash_command= 'python3 /home/jacrod2901/geese/cowin/Bootstrapper.py --coreconfig /home/jacrod2901/geese/cowin/resources/core-config.yaml --componentconfig /home/jacrod2901/geese/cowin/resources/processapidata.yaml',
+        depends_on_past= True,
     )
 
     

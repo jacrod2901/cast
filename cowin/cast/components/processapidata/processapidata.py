@@ -47,8 +47,9 @@ class ProcessApiData:
                 for sessions_dict in data_dict['sessions']:
                     session_tup = (sessions_dict['session_id'],sessions_dict['date'],sessions_dict['available_capacity'],sessions_dict['min_age_limit'],sessions_dict['vaccine'],sessions_dict['available_capacity_dose1'],sessions_dict['available_capacity_dose2'],data_dict['name'], dist_name, api_ts, data_fetch_dt, district_id, data_process_ts )
                     self.writeProcessedDatatoDB(session_tup)
+                    self.__jsonconfig.updateDocumentTS(self.__max_data_process_ts) #Update Document TS
         if self.__max_data_process_ts: 
-            self.__jsonconfig.updateDocumentTS(self.__max_data_process_ts) #Update Document TS
+            # self.__jsonconfig.updateDocumentTS(self.__max_data_process_ts) #Update Document TS
             self.__dbconnObj.close()
         return 1
 

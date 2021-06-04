@@ -1,3 +1,4 @@
 user-table-name: cast_userrequests_tbl
 component-name: checkvaxavailability.checkvaxavailability
 output-csv-path: /home/jacrod2901/geese/cowin/resources/output.csv
+processed-apidata-table-name: cast_processedapidata_tbl
