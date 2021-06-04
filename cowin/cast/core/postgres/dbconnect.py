@@ -14,6 +14,7 @@ class DbConnect:
         self.__db_params = db_params
 
 
+
     def __establishConn(self):
         dbname = self.__db_params['dbname']
         dbuser = self.__db_params['dbuser']
@@ -31,33 +32,25 @@ class DbConnect:
         return dbConnObj
 
 
-
-
-
-
     def getConnObj(self):
         return self.__establishConn()
 
 
-    def closeDbConnection(self):
-        self.__establishConn.close()
+    def closeDbConnection(self, conn_obj):
+        conn_obj.close()
 
-    def __fetchData(self, query_string):
-        self.__dbConnObj = self.__establishConn()
-        if self.__dbConnObj.status == 1:
-            curObj = self.__dbConnObj.cursor()
+    def __fetchData(self, query_string, conn_obj):
+        # self.__dbConnObj = self.__establishConn()
+        if conn_obj.status == 1:
+            curObj = conn_obj.cursor()
             curObj.execute(query_string)
             rows = curObj.fetchall()
-            self.__dbConnObj.commit()
-            self.__dbConnObj.close()
-            return rows
-
-        self.__dbConnObj.commit()
-        self.__dbConnObj.close()
+            conn_obj.commit()
+            return rows        
         return []
 
-    def getData(self, query_string):
-        return self.__fetchData(query_string)
+    def getData(self, query_string, conn_obj):
+        return self.__fetchData(query_string, conn_obj)
 
     
     def __insertDataHitsTbl(self, dbtablename, json_data):
