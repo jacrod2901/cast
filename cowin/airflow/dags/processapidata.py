@@ -16,7 +16,7 @@ def end():
 default_args = {
     "owner": "ORCA",
     "depends_on_past": False,
-    "start_date": datetime(2020, 5, 3),
+    "start_date": datetime(2021, 6, 5),
     "email": ["dev@orcasol.net"],
     "email_on_failure": True,
     "email_on_retry": False,
@@ -43,8 +43,9 @@ with DAG(
 
     t2 = BashOperator(
         task_id='ProcessAPIData',
-        bash_command= 'python3 /home/jacrod2901/geese/cowin/Bootstrapper.py --coreconfig /home/jacrod2901/geese/cowin/resources/core-config.yaml --componentconfig /home/jacrod2901/geese/cowin/resources/processapidata.yaml',
         depends_on_past= True,
+        bash_command= 'python3 /home/jacrod2901/geese/cowin/Bootstrapper.py --coreconfig /home/jacrod2901/geese/cowin/resources/core-config.yaml --componentconfig /home/jacrod2901/geese/cowin/resources/processapidata.yaml',
+        
     )
 
     
