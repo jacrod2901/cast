@@ -2,7 +2,7 @@
 class QueryGenerator:
     def __init__(self):
         # TO get All districtNames From cast_userrequests_tbl where req_status = 0.
-        self.__userRequestQuery = 'SELECT state_name, district_name, email_id FROM placeholder_dbtablename where req_status is NULL'
+        self.__userRequestQuery = 'SELECT state_name, district_name, email_id, send_notification, age_group FROM placeholder_dbtablename where req_status is NULL'
 
 
         # TO get state_id  from cast_geo_state_tbl for input state_name.
@@ -27,8 +27,8 @@ class QueryGenerator:
 
         # Insert New User Request Data in cast_userrequests_tbl
         self.__insertDataUserRequestTblQuery = """INSERT INTO placeholder_dbtablename 
-                                                    (state_name, district_name,email_id, req_TS)
-                                                    VALUES ('placeholder_state_name', 'placeholder_district_name', 'placeholder_email_id','placeholder_req_TS');"""
+                                                    (state_name, district_name,email_id, req_TS, send_notification, age_group)
+                                                    VALUES (%s,%s,%s,%s,%s,%s);"""
 
 
         # Insert New District Data in cast_geo_dist_tbl
@@ -58,7 +58,7 @@ class QueryGenerator:
         self.__insertProcessedData = """INSERT INTO placeholder_dbtblname (session_id, available_date, available_capacity, min_age_limit, vaccine,available_capacity_dose1, available_capacity_dose2, block_name, dist_name, data_fetch_ts, data_fetch_date, district_id, data_process_ts) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
 
         # to retrieve un Processed records from  cast_processedapidata_tbl
-        self.__unProcessedApiDataQuery = """Select dist_name,block_name,  available_capacity, available_date, data_process_ts ,data_fetch_ts from placeholder_tblname """
+        self.__unProcessedApiDataQuery = """Select dist_name,block_name, min_age_limit, available_capacity, available_date, data_process_ts ,data_fetch_ts from placeholder_tblname """
 
         # TO Update Processed Records
         self.__updatedProcessedStatusQuery = """ Update placeholder_tblname set is_processed = 1 where is_processed is NULL and data_process_ts < 'placeholder_ts'"""
