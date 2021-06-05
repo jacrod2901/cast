@@ -20,7 +20,7 @@ class EmailUtil:
         self.__email_subject = self.__email_config['email-subject']
         # self.__email_content = self.__email_config['email-content']
         
-    def __create_message(self, email_to, email_content):
+    def __create_message(self, email_to, email_from, email_subject,email_content):
         """Create a message for an email.
         Args:
             sender: Email address of the sender.
@@ -32,8 +32,8 @@ class EmailUtil:
         """
         message = MIMEText(email_content)
         message['to'] = email_to
-        message['from'] = self.__email_from
-        message['subject'] = self.__email_subject
+        message['from'] = email_from
+        message['subject'] = email_subject
         return {'raw': base64.urlsafe_b64encode(message.as_string().encode()).decode()}
 
     
@@ -87,10 +87,10 @@ class EmailUtil:
         service = build('gmail', 'v1', credentials=creds)
         return service
 
-    def send_email(self, email_to, email_content):
+    def send_email(self, email_to, email_from, email_subject,email_content):
         service = self.__service_account_login()
         # Call the Gmail API
-        message = self.__create_message(email_to,email_content)
+        message = self.__create_message(email_to, email_from, email_subject,email_content)
         sent = self.__send_message(service,'me', message)
         return sent
 
