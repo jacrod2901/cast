@@ -1,9 +1,9 @@
 db-config:
   dbname: castdb
-  dbpass: Big@data10
+  dbpass: *********************
   dbhost: localhost
   dbport: 5432
-  dbuser: jacrod2901
+  dbuser: *********************
 component-root: cast.components
 email-config:
   credentials-path: /home/jacrod2901/geese/cowin/secrets/credentials.json
